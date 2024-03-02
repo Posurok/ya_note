@@ -22,6 +22,16 @@ class TestRoutes(TestCase):
             slug='badger'
         )
 
+    def test_slug_transliteration_on_creation(self):
+        note = Note.objects.create(
+            author=self.author,
+            title='Пример Заголовка',
+            text='Пример текста'
+        )
+
+        expected_slug = 'primer-zagolovka'
+        self.assertEqual(note.slug, expected_slug)
+
     def test_pages_availability(self):
         urls = (
             ('notes:home', None),
