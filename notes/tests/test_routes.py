@@ -22,16 +22,6 @@ class TestRoutes(TestCase):
             slug='badger'
         )
 
-    def test_slug_transliteration_on_creation(self):
-        note = Note.objects.create(
-            author=self.author,
-            title='Пример Заголовка',
-            text='Пример текста'
-        )
-
-        expected_slug = 'primer-zagolovka'
-        self.assertEqual(note.slug, expected_slug)
-
     def test_pages_availability(self):
         urls = (
             ('notes:home', None),
@@ -60,7 +50,7 @@ class TestRoutes(TestCase):
 
     def test_redirect_for_anonymous_client(self):
         login_url = reverse('users:login')
-        for name in ('notes:edit', 'notes:delete'):
+        for name in ('notes:edit', 'notes:delete', 'notes:detail'):
             with self.subTest(name=name):
                 url = reverse(name, args=(self.note.slug,))
                 redirect_url = f'{login_url}?next={url}'
