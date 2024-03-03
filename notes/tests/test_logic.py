@@ -70,22 +70,24 @@ class TestPostCreation(TestCase):
         self.assertEqual(note.slug, expected_slug)
 
     def test_author_can_edit_note(self):
-        """Проверяем, что автор может редактировать свою заметку."""
         new_title = "Измененный заголовок"
         new_text = "Измененный текст заметки"
         edit_url = self.edit_url_for_note(self.note.slug)
-        response = self.client.post(edit_url, {'title': new_title, 'text': new_text})
+        response = self.client.post(
+            edit_url,
+            {'title': new_title, 'text': new_text}
+        )
         self.note.refresh_from_db()
 
-        # Предполагаем, что после успешного редактирования происходит редирект на страницу заметки
         self.assertRedirects(response, reverse('notes:success'))
 
     def test_author_can_delete_note(self):
-        """Проверяем, что автор может удалить свою заметку."""
-        delete_url = reverse('notes:delete', kwargs={'slug': self.note.slug})
+        delete_url = reverse(
+            'notes:delete',
+            kwargs={'slug': self.note.slug}
+        )
         response = self.client.post(delete_url)
 
-        # Предполагаем, что после успешного удаления происходит редирект на список заметок
         self.assertRedirects(response, reverse('notes:success'))
         with self.assertRaises(Note.DoesNotExist):
             self.note.refresh_from_db()
