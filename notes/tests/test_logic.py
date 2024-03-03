@@ -91,3 +91,13 @@ class TestPostCreation(TestCase):
         self.assertRedirects(response, reverse('notes:success'))
         with self.assertRaises(Note.DoesNotExist):
             self.note.refresh_from_db()
+
+    def test_unable_to_create_duplicate_slug(self):
+        duplicate_slug = self.note.slug
+        with self.assertRaises(Exception):
+            Note.objects.create(
+                author=self.author,
+                title='Другой заголовок',
+                text='Другой текст',
+                slug=duplicate_slug
+            )
